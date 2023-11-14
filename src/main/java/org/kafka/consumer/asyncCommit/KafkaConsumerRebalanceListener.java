@@ -36,17 +36,7 @@ public class KafkaConsumerRebalanceListener {
         configs.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false); // 리밸런스 발생 시 수동커밋을 위함
 
         consumer = new KafkaConsumer<>(configs);
-        //consumer.subscribe(Arrays.asList(TOPIC_NAME), new RebalanceListener());
-        consumer.assign(Collections.singleton(new TopicPartition(TOPIC_NAME, PARTITION_NUMBER)));
-        Set<TopicPartition> assignedTopicPartition = consumer.assignment();
-
-        Iterator<TopicPartition> list = assignedTopicPartition.iterator();
-
-        while(list.hasNext()){
-            TopicPartition partition = list.next();
-            System.out.println(partition.topic());
-            System.out.println(partition.partition());
-        }
+        consumer.subscribe(Arrays.asList(TOPIC_NAME), new RebalanceListener());
 
         while(true){
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(1));
